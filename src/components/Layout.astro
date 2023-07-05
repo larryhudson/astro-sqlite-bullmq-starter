@@ -14,13 +14,13 @@ const statusMessage = getStatusMessage(statusId);
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-<script src="/htmx.min.js" is:inline></script>
 	</head>
 	<body>
 		<header>
 			{statusMessage && <p>{statusMessage}</p>}
 		</header>
 		<main>
+			<h1>{title}</h1>
 			<slot />
 		</main>
 	</body>
