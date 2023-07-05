@@ -1,0 +1,18 @@
+---
+import {getRecordById} from "@src/utils/db";
+
+const {id} = Astro.params;
+
+const note = getRecordById('notes', id);
+---
+
+
+
+<form hx-target="this" hx-swap="outerHTML" hx-put={`/x/notes/${id}`}>
+<h1>Editing note: {note.title}</h1>
+	<label for="title-input">Title</label>
+	<input name="title" id="title-input" value={note.title} />
+	<label for="body-input">Body</label>
+	<textarea name="body" id="body-input">{note.body}</textarea>
+	<button>Save</button>
+</form>

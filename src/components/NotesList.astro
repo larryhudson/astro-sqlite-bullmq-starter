@@ -1,0 +1,19 @@
+---
+const {notes} = Astro.props;
+---
+<div hx-target="this">
+<ul>
+	{notes.map(note => (
+	<li><a href={`/notes/${note.id}`}>{note.title}</a></li>	
+	))}
+</ul>
+
+<h2>Create new</h2>
+<form hx-post="/x/notes" method="POST">
+	<label for="title-input">Title</label>
+	<input name="title" id="title-input" />
+	<label for="body-input">Body</label>
+	<textarea name="body" id="body-input"></textarea>
+	<button>Create</button>
+</form>
+</div>

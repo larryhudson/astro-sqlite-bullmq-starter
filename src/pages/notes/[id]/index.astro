@@ -1,46 +1,16 @@
 ---
-
-import {Queue} from "bullmq";
-
-import {getRecordById, deleteRecordById} from "@src/utils/db";
+import {getRecordById, deleteRecordById, updateRecord} from "@src/utils/db";
 
 import Layout from "@src/components/Layout.astro";
 import Dump from "@src/components/Dump.astro";
-
+import Note from "@src/components/Note.astro";
 const {id} = Astro.params;
-
-if (Astro.request.method === 'POST') {
-  const formData = await Astro.request.formData();
-  const action = formData.get('action');
-  if (action === 'delete') {
-	const deleted = deleteRecordById('notes', id);
-	if (deleted) return Astro.redirect('/notes?status=deleted');
-  } else if (action === 'process') {
-	const taskQueue = new Queue('processingQueue')
-	await taskQueue.add('processNote', {id}); 
-  }
-
-}
 
 const note = getRecordById('notes', id);
 ---
 
-<Layout title={`Note: ${note.title}`}>
+<Layout>
 
-	<form method="POST">
-		<button name="action" value="delete">Delete</button>
-		<button name="action" value="process">Process asynchronously</button>
-	</form>
+	<Note {note} />	
 
-	<p><a href={`/notes/${note.id}/edit`}>Edit</a></p>
-
-	<dl>
-	<dt>Title:</dt>
-	<dd>{note.title}</dd>
-
-	<dt>Body:</dt>
-	<dd>{note.body}</dd>
-	</dl>
-
-	<Dump data={note} />	
 </Layout>

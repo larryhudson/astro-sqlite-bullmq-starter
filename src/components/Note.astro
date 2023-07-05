@@ -1,0 +1,33 @@
+---
+const {note, message} = Astro.props;
+const isProcessing = note.status === 'processing' || note.status === 'enqueued';
+---
+
+<div hx-target="this" hx-swap="outerHTML"
+		      hx-get={isProcessing ? `/x/notes/${note.id}` : undefined}
+		      hx-trigger={isProcessing ? `load delay:1s` : undefined} >
+
+	<h1>Note: {note.title}</h1>
+
+	<p>{message}</p>
+
+	<button hx-get={`/x/notes/${note.id}/edit`}>Edit</button>
+	<button hx-delete={`/x/notes/${note.id}`}>Delete</button>
+	<button disabled={isProcessing} hx-post={`/x/notes/${note.id}/process`}>Process asynchronously</button>
+
+	<dl>
+		<dt>Title:</dt>
+		<dd>{note.title}</dd>
+
+		<dt>Body:</dt>
+		<dd>{note.body}</dd>
+
+		<dt>Status:</dt>
+		<dd>{note.status}</dd>
+
+		<dt>Processed at:</dt>
+		<dd>{note.processed_at}</dd>
+	</dl>
+
+
+</div>

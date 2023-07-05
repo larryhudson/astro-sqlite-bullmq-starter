@@ -1,0 +1,19 @@
+---
+import Note from "@src/components/Note.astro";
+import {Queue} from "bullmq"
+
+import {getRecordById, updateRecord} from "@src/utils/db";
+
+const {id} = Astro.params;
+
+if (Astro.request.method === 'POST') {
+// add to queue
+const taskQueue = new Queue('processingQueue');
+taskQueue.add('processNote', {id});
+updateRecord('notes', id, {status: 'enqueued'});
+}
+
+const note = getRecordById('notes', id);
+---
+
+<Note {note} />

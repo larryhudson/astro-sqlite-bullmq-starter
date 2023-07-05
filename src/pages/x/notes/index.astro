@@ -1,0 +1,16 @@
+---
+import NotesList from "@src/components/NotesList.astro";
+import { createRecord, executeQuery } from "@src/utils/db";
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const title = formData.get('title');
+  const body = formData.get('body');
+
+  createRecord('notes', {title, body})
+}
+
+const notes = executeQuery('notes');
+---
+
+<NotesList {notes} />

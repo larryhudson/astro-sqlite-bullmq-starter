@@ -1,0 +1,24 @@
+---
+import Note from "@src/components/Note.astro";
+import {getRecordById, deleteRecordById, updateRecord} from "@src/utils/db";
+
+const {id} = Astro.params;
+
+let message;
+
+if (Astro.request.method === 'DELETE') {
+   deleteRecordById('notes', id);
+   message = 'deleted';
+   return new Response(null, {status: 200, headers: {'HX-Redirect': '/notes', 'X-Status-Message': message}});
+   } else if (Astro.request.method === 'PUT') {
+   const formData = await Astro.request.formData();
+   const title = formData.get('title');
+   const body = formData.get('body');
+   updateRecord('notes', id, {title, body});
+   message = 'updated';
+   }
+
+const note = getRecordById('notes', id);
+---
+
+<Note {note} {message} />
