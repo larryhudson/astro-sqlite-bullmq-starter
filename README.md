@@ -4,6 +4,10 @@ This is an Astro starter project with a headstart for creating server-rendered w
 
 - Astro with server-side rendering (with `@astrojs/node` adapter)
 - sqlite database using `better-sqlite3` library with script for initialising (`initialise-db.js`) and helper functions for CRUD actions (see `src/utils/db.js`)
+- Example routes for CRUD actions:
+    - index of notes `src/pages/notes/index.astro`
+    - view note `src/pages/notes/[id]/index.astro`
+    - edit note `src/pages/notes/[id]/edit.astro`
 - asynchronous task processing with `bullmq` library. can add jobs to queue inside Astro routes / API endpoints, and then the queue handles those jobs.
 - simple `<Layout>` component with status messages
 - simple `<Dump>` component for viewing variables in dev
