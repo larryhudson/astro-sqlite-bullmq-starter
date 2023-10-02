@@ -1,6 +1,7 @@
 ---
 
 import {Queue} from "bullmq";
+import { taskQueue } from "@src/utils/task-queue";
 
 import {getRecordById, deleteRecordById} from "@src/utils/db";
 
@@ -16,7 +17,6 @@ if (Astro.request.method === 'POST') {
 	const deleted = deleteRecordById('notes', id);
 	if (deleted) return Astro.redirect('/notes?status=deleted');
   } else if (action === 'process') {
-	const taskQueue = new Queue('processingQueue')
 	await taskQueue.add('processNote', {id}); 
   }
 

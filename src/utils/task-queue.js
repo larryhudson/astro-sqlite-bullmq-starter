@@ -1,8 +1,8 @@
-import {Queue} from "bullmq"
+import { Queue } from "bullmq";
 
-export async function addToQueue({queueName, jobName, jobData}) {
-
-  const taskQueue = new Queue(queueName);
-
-  return taskQueue.add(jobName, jobData);  
-}
+export const taskQueue = new Queue("taskQueue", {
+  connection: {
+    host: "127.0.0.1",
+    port: 6379,
+  },
+});
