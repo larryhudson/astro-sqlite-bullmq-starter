@@ -1,27 +1,30 @@
 import { Worker } from "bullmq";
-import { updateRecord } from "./src/utils/db.js";
+import { processNote } from "./background-tasks/process-note.js";
 
-const worker = new Worker(
-  "taskQueue",
-  async (job) => {
-    if (job.name === "processNote") {
-      updateRecord("notes", job.data.id, { status: "processing" });
-      await new Promise((res) => setTimeout(res, 5000));
-      const now = new Date();
-      const dateString = now.toISOString();
-      updateRecord("notes", job.data.id, {
-        status: "processed",
-        processed_at: dateString,
-      });
-    }
+const handlers = {
+  processNote,
+};
+
+function handleJob(job) {
+  const handler = handlers[job.name];
+
+  if (!handler) {
+    throw new Error(`No handler for job ${job.name}`);
+  }
+
+  console.log({ jobData: job.data });
+
+  return handler(job.data);
+}
+
+const redisOptions = {
+  connection: {
+    host: "127.0.0.1",
+    port: 6379,
   },
-  {
-    connection: {
-      host: "127.0.0.1",
-      port: 6379,
-    },
-  },
-);
+};
+
+const worker = new Worker("taskQueue", handleJob, redisOptions);
 
 worker.on("active", (job) => {
   console.log(`${job.id} has started!`);
