@@ -1,0 +1,30 @@
+---
+import { handleLogin } from "@src/utils/auth";
+import Layout from "@src/components/Layout.astro";
+
+let errorMessage;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const enteredEmail = formData.get("email");
+  const enteredPassword = formData.get("password");
+
+  const loginSuccess = await handleLogin(Astro, enteredEmail, enteredPassword);
+  if (loginSuccess) return Astro.redirect("/articles/");
+}
+---
+
+<Layout>
+  <h1>Login</h1>
+
+  <form method="POST">
+    {errorMessage && <p>{errorMessage}</p>}
+    <label>Email</label>
+    <input type="email" name="email" />
+
+    <label>Password</label>
+    <input type="password" name="password" />
+
+    <button type="submit">Log in</button>
+  </form>
+</Layout>

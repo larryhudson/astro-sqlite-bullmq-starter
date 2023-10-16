@@ -1,0 +1,43 @@
+---
+import { handleSignup } from "@src/utils/auth";
+import Layout from "@src/components/Layout.astro";
+
+let errorMessage;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const confirmPassword = formData.get("confirm-password");
+
+  try {
+    const signupSuccess = await handleSignup(
+      Astro,
+      email,
+      password,
+      confirmPassword,
+    );
+    if (signupSuccess) return Astro.redirect("/notes/");
+  } catch (error) {
+    errorMessage = error.message;
+  }
+}
+---
+
+<Layout>
+  <h1>Sign up</h1>
+
+  <form method="POST">
+    {errorMessage && <p>{errorMessage}</p>}
+    <label>Email</label>
+    <input type="email" name="email" />
+
+    <label>Password</label>
+    <input type="password" name="password" />
+
+    <label>Confirm password</label>
+    <input type="password" name="confirm-password" />
+
+    <button type="submit">Sign up</button>
+  </form>
+</Layout>

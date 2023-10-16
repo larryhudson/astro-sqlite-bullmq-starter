@@ -48,7 +48,14 @@ export function updateRecord(table, id, data) {
   return result.changes > 0;
 }
 
-export function executeQuery(table, condition) {
+export function findRecord(args) {
+  const results = executeQuery(args);
+
+  if (results.length === 0) return null;
+  return results[0];
+}
+
+export function executeQuery({ table, condition }) {
   let whereClause = "";
   const values = [];
 
