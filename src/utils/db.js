@@ -16,8 +16,6 @@ export function createRecord(table, data) {
 }
 
 function parseId(id) {
-  console.log({ id });
-
   const parsedId = parseInt(id);
 
   if (Number.isNaN(parsedId)) {
@@ -48,8 +46,10 @@ export function updateRecord(table, id, data) {
   return result.changes > 0;
 }
 
-export function executeQuery(table, condition) {
+export function executeQuery(table, condition, limit, offset) {
   let whereClause = "";
+  let limitClause = "";
+  let offsetClause = "";
   const values = [];
 
   if (condition) {
@@ -62,7 +62,16 @@ export function executeQuery(table, condition) {
     whereClause = `WHERE ${conditions.join(" AND ")}`;
   }
 
-  const query = `SELECT * FROM ${table} ${whereClause}`;
+  if (limit) {
+    limitClause = `LIMIT ${limit}`;
+  }
+
+  if (offset) {
+    offsetClause = `OFFSET ${offset}`;
+  }
+
+  const query =
+    `SELECT * FROM ${table} ${whereClause} ${limitClause} ${offsetClause}`.trim();
   const statement = db.prepare(query);
   return statement.all(values);
 }
